@@ -2,25 +2,9 @@
 
 # ApplicationController
 class ApplicationController < ActionController::API
-  before_action :authenticate_user, if: :token_present?
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
-  private
-
-  def authenticate_user
-    token = request.headers['Authorization']&.split(' ')&.last
-    nil unless token && valid_token?(token)
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[line_id line_name birth_day email phone_number address zip_code name delivery_person_name delivery_zip_code delivery_address delivery_phone_number id_login business_license_front business_license_back document_front document_back])
   end
-
-  def token_present?
-    request.headers['Authorization'].present?
-  end
-
-  def valid_token?(token)
-    decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base)
-    user_id = decoded_token[0]['user_id']
-    @current_user = User.find_by(id: user_id)
-    @current_user.present?
-  end
-
-  attr_reader :current_user
 end

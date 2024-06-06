@@ -67,3 +67,7 @@ group :development do
   gem 'rspec-rails', '~> 5.1.2'
   gem 'rubocop', '~> 1.62'
 end
+
+# devise
+gem 'devise', '~> 4.9'
+gem 'devise-jwt', '~> 0.11.0'
